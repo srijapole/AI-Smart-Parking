@@ -1,7 +1,16 @@
 
 from datetime import datetime, timezone, date
 
-from sqlalchemy import Date, DateTime, ForeignKey, Integer, String
+from sqlalchemy import (
+    Boolean,
+    Date,
+    DateTime,
+    Float,
+    ForeignKey,
+    Integer,
+    String,
+    Text,
+)
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from backend.database import Base
@@ -128,3 +137,84 @@ class Vehicle(Base):
     owner: Mapped["User"] = relationship(
         back_populates="vehicles",
     )
+
+
+class ParkingLocation(Base):
+    __tablename__ = "parking_locations"
+
+    id: Mapped[int] = mapped_column(
+        Integer,
+        primary_key=True,
+        index=True,
+    )
+
+    name: Mapped[str] = mapped_column(
+        String(150),
+        nullable=False,
+        index=True,
+    )
+
+    building_number: Mapped[str | None] = mapped_column(
+        String(30),
+        nullable=True,
+    )
+
+    street: Mapped[str] = mapped_column(
+        String(255),
+        nullable=False,
+    )
+
+    city: Mapped[str] = mapped_column(
+        String(100),
+        nullable=False,
+        index=True,
+    )
+
+    state: Mapped[str] = mapped_column(
+        String(100),
+        nullable=False,
+    )
+
+    pincode: Mapped[str] = mapped_column(
+        String(10),
+        nullable=False,
+        index=True,
+    )
+
+    latitude: Mapped[float | None] = mapped_column(
+        Float,
+        nullable=True,
+    )
+
+    longitude: Mapped[float | None] = mapped_column(
+        Float,
+        nullable=True,
+    )
+
+    description: Mapped[str | None] = mapped_column(
+        Text,
+        nullable=True,
+    )
+
+    is_active: Mapped[bool] = mapped_column(
+        Boolean,
+        default=True,
+        nullable=False,
+    )
+
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        default=utc_now,
+        nullable=False,
+    )
+
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        default=utc_now,
+        onupdate=utc_now,
+        nullable=False,
+    )
+
+
+
+
