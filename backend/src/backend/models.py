@@ -10,6 +10,7 @@ from sqlalchemy import (
     Integer,
     String,
     Text,
+    UniqueConstraint,
 )
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -214,6 +215,70 @@ class ParkingLocation(Base):
         onupdate=utc_now,
         nullable=False,
     )
+
+
+class ParkingSlot(Base):
+    __tablename__ = "parking_slots"
+
+    id: Mapped[int] = mapped_column(
+        Integer,
+        primary_key=True,
+        index=True,
+    )
+
+    location_id: Mapped[int] = mapped_column(
+        ForeignKey("parking_locations.id", ondelete="RESTRICT"),
+        nullable=False,
+        index=True,
+    )
+
+    slot_number: Mapped[str] = mapped_column(
+        String(30),
+        nullable=False,
+    )
+
+    vehicle_type: Mapped[str] = mapped_column(
+        String(20),
+        nullable=False,
+    )
+
+    floor: Mapped[str | None] = mapped_column(
+        String(20),
+        nullable=True,
+    )
+
+    section: Mapped[str | None] = mapped_column(
+        String(30),
+        nullable=True,
+    )
+
+    is_active: Mapped[bool] = mapped_column(
+        Boolean,
+        default=True,
+        nullable=False,
+    )
+
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        default=utc_now,
+        nullable=False,
+    )
+
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        default=utc_now,
+        onupdate=utc_now,
+        nullable=False,
+    )
+
+    __table_args__ = (
+        UniqueConstraint(
+            "location_id",
+            "slot_number",
+            name="uq_parking_slot_location_number",
+        ),
+    )
+
 
 
 

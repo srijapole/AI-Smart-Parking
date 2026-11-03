@@ -189,3 +189,36 @@ class ParkingLocationResponse(BaseModel):
 
     model_config = ConfigDict(from_attributes=True)
 
+class ParkingSlotCreateRequest(BaseModel):
+    location_id: int = Field(gt=0)
+    slot_number: str = Field(min_length=1, max_length=30)
+    vehicle_type: Literal["car", "bike"]
+    floor: str | None = Field(default=None, max_length=20)
+    section: str | None = Field(default=None, max_length=30)
+
+
+class ParkingSlotUpdateRequest(BaseModel):
+    slot_number: str | None = Field(
+        default=None,
+        min_length=1,
+        max_length=30,
+    )
+    vehicle_type: Literal["car", "bike"] | None = None
+    floor: str | None = Field(default=None, max_length=20)
+    section: str | None = Field(default=None, max_length=30)
+    is_active: bool | None = None
+
+
+class ParkingSlotResponse(BaseModel):
+    id: int
+    location_id: int
+    slot_number: str
+    vehicle_type: str
+    floor: str | None
+    section: str | None
+    is_active: bool
+    created_at: datetime
+    updated_at: datetime
+
+    model_config = ConfigDict(from_attributes=True)
+
