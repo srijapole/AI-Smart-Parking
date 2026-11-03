@@ -1,0 +1,86 @@
+Smart Parking 
+----------------------------------
+User details:
+-> name, mobile, email(optional),license(optional))
+ 
+-> Vechile details 
+    -> vehicle type
+    
+
+        Car (xuv , sedan , Crossover ,Micro) 
+        Bike 
+       
+    -> car registration number 
+    -> bike registration number 
+    
+-> Parking slots 
+
+Address  
+     ->  Type of parking slots
+            Car, bike
+     ->  Available parking slots for each type 
+     ->  reserved parking slots  for each type 
+     
+  Users:
+-> User type
+    -> employers
+    -> Clients 
+    -> Visitors 
+-> name 4-255 string
+-> mobile 10 number
+-> dob datetime
+-> email  4-255 string
+-> vehicle id (FK from vehicle table)
+-> created timestamp ( while entering ) 
+-> updated timestamp ( while exiting )  
+Pricing 
+-> parking slot id 
+-> vehicle type
+->  no of hours 
+Car price - 
+Bike price  
+Address: 
+-> id
+-> Building no 
+-> street/village
+-> city
+-> state
+-> Pincode
+-> lat
+-> long
+-> created timestamp
+-> updated timestamp
+ 
+Vehicle details:
+-> id
+-> vehicle number
+-> vehicle type
+    - car 
+    - bike
+-> vehicle model 
+    -> suv
+    -> sedan
+ 
+ 
+slots_availability
+-> id
+-> Reserved (FK from charging table)
+    Bike 
+    Car 
+-> car slots count
+-> bike slots count
+
+
+Payments 
+-> subscription ( employees)
+-> Daily ( visitors , clients ) 
+-> payment type ( upi , net banking , card , cash) 
+-> payment status ( Success , pending , failed , refund processing ) 
+ 
+ 
+CRUD operations
+-> Create POST
+-> Read GET - one record, all record
+-> update PATCH/PUT
+-> delete DELTE
+ 
