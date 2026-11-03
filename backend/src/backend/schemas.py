@@ -8,8 +8,8 @@ from pydantic import (
     EmailStr,
     Field,
     field_validator,
+    model_validator,
 )
-
 
 UserType = Literal["employer", "client", "visitor"]
 VehicleType = Literal["car", "bike"]
@@ -125,3 +125,67 @@ class VehicleUpdateRequest(BaseModel):
         if value is not None:
             return value.strip().upper()
         return value
+
+    
+# -------------------------
+# Parking location schemas
+# -------------------------
+
+class ParkingLocationCreateRequest(BaseModel):
+    name: str = Field(min_length=2, max_length=150)
+    building_number: str | None = Field(default=None, max_length=30)
+    street: str = Field(min_length=2, max_length=255)
+    city: str = Field(min_length=2, max_length=100)
+    state: str = Field(min_length=2, max_length=100)
+    pincode: str = Field(pattern=r"^[0-9]{6}$")
+    latitude: float | None = Field(default=None, ge=-90, le=90)
+    longitude: float | None = Field(default=None, ge=-180, le=180)
+    description: str | None = None
+
+    @model_validator(mode="after")
+    def validate_coordinates(self):
+        if (self.latitude is None) != (self.longitude is None):
+            raise ValueError(
+                "Latitude and longitude must be provided together"
+            )
+        return self
+
+
+class ParkingLocationUpdateRequest(BaseModel):
+    name: str | None = Field(default=None, min_length=2, max_length=150)
+    building_number: str | None = Field(default=None, max_length=30)
+    street: str | None = Field(default=None, min_length=2, max_length=255)
+    city: str | None = Field(default=None, min_length=2, max_length=100)
+    state: str | None = Field(default=None, min_length=2, max_length=100)
+    pincode: str | None = Field(default=None, pattern=r"^[0-9]{6}$")
+    latitude: float | None = Field(default=None, ge=-90, le=90)
+    longitude: float | None = Field(default=None, ge=-180, le=180)
+    description: str | None = None
+    is_active: bool | None = None
+
+    @model_validator(mode="after")
+    def validate_coordinates(self):
+        if (self.latitude is None) != (self.longitude is None):
+            raise ValueError(
+                "Latitude and longitude must be provided together"
+            )
+        return self
+
+
+class ParkingLocationResponse(BaseModel):
+    id: int
+    name: str
+    building_number: str | None
+    street: str
+    city: str
+    state: str
+    pincode: str
+    latitude: float | None
+    longitude: float | None
+    description: str | None
+    is_active: bool
+    created_at: datetime
+    updated_at: datetime
+
+    model_config = ConfigDict(from_attributes=True)
+

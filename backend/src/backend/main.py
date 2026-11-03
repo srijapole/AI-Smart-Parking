@@ -9,6 +9,7 @@ from backend.auth import router as auth_router
 from backend.config import settings
 from backend.database import engine
 from backend.vehicles import router as vehicles_router
+from backend.locations import router as locations_router
 
 
 @asynccontextmanager
@@ -42,6 +43,7 @@ app.add_middleware(
 # Register API routers
 app.include_router(auth_router)
 app.include_router(vehicles_router)
+app.include_router(locations_router)
 
 
 @app.get("/health")
