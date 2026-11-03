@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Smart Parking System</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+    <h2>🚗 AI Smart Parking</h2>
+    <nav>
+        <button onclick="showPage('home')">Home</button>
+        <button onclick="showPage('register')">Register</button>
+        <button onclick="showPage('login')">Login</button>
+    </nav>
+</header>
+
+<!-- HOME -->
+<section id="home" class="page">
+    <div class="hero">
+        <h1>Welcome to AI Smart Parking</h1>
+        <p>Smart Parking Management, Reservations and AI Predictions</p>
+        <button onclick="showPage('register')">Get Started</button>
+    </div>
+</section>
+
+<!-- REGISTER -->
+<section id="register" class="page hidden">
+    <div class="form-box">
+        <h2>User Registration</h2>
+
+        <form id="registerForm">
+            <input id="regName" placeholder="Full Name" required>
+            <input id="regEmail" type="email" placeholder="Email" required>
+            <input id="regPassword" type="password" placeholder="Password" required>
+
+            <select id="regVehicle" required>
+                <option value="">Select Vehicle Type</option>
+                <option>Car</option>
+                <option>Bike</option>
+                <option>Cycle</option>
+                <option>Truck</option>
+                <option>DCM</option>
+                <option>Trolley</option>
+                <option>Auto</option>
+            </select>
+
+            <input id="regNumber" placeholder="Vehicle Number" required>
+
+            <button type="submit">Register</button>
+        </form>
+
+        <p>Already registered?
+            <a href="#" onclick="showPage('login')">Login</a>
+        </p>
+    </div>
+</section>
+
+<!-- LOGIN -->
+<section id="login" class="page hidden">
+    <div class="form-box">
+        <h2>User Login</h2>
+
+        <form id="loginForm">
+            <input id="loginEmail" type="email" placeholder="Email" required>
+            <input id="loginPassword" type="password" placeholder="Password" required>
+            <button type="submit">Login</button>
+        </form>
+
+        <p>New user?
+            <a href="#" onclick="showPage('register')">Register</a>
+        </p>
+    </div>
+</section>
+
+<!-- DASHBOARD -->
+<section id="dashboard" class="page hidden">
+
+    <div class="dashboard-header">
+        <h1>Parking Dashboard</h1>
+        <button class="logout" onclick="logout()">Logout</button>
+    </div>
+
+    <h3 id="welcomeUser">Welcome!</h3>
+
+    <div class="stats">
+        <div class="stat-card">
+            <h3>Total Slots</h3>
+            <p id="totalSlots">30</p>
+        </div>
+        <div class="stat-card">
+            <h3>Available</h3>
+            <p id="availableSlots">30</p>
+        </div>
+        <div class="stat-card">
+            <h3>Occupied</h3>
+            <p id="occupiedSlots">0</p>
+        </div>
+        <div class="stat-card">
+            <h3>Reserved</h3>
+            <p id="reservedSlots">0</p>
+        </div>
+    </div>
+
+    <h2>Parking Locations</h2>
+    <div class="location-grid">
+        <div class="location-card">
+            <h3>Office Parking</h3>
+            <p>Hitech City, Hyderabad</p>
+        </div>
+        <div class="location-card">
+            <h3>Shopping Mall</h3>
+            <p>Madhapur, Hyderabad</p>
+        </div>
+        <div class="location-card">
+            <h3>Airport Parking</h3>
+            <p>Shamshabad, Hyderabad</p>
+        </div>
+        <div class="location-card">
+            <h3>Function Hall</h3>
+            <p>Hyderabad</p>
+        </div>
+    </div>
+
+    <h2>Parking Slot Availability</h2>
+    <div class="vehicle-grid">
+        <div class="vehicle-card">
+            <h3>🚗 Car</h3>
+            <p>Total: 10</p>
+            <p>Available: <span id="carAvailable">10</span></p>
+        </div>
+        <div class="vehicle-card">
+            <h3>🏍️ Bike</h3>
+            <p>Total: 15</p>
+            <p>Available: <span id="bikeAvailable">15</span></p>
+        </div>
+        <div class="vehicle-card">
+            <h3>🚲 Cycle</h3>
+            <p>Total: 5</p>
+            <p>Available: <span id="cycleAvailable">5</span></p>
+        </div>
+    </div>
+
+    <h2>Book Parking</h2>
+    <div class="form-box">
+        <form id="bookingForm">
+            <select id="bookingLocation" required>
+                <option value="">Select Location</option>
+                <option>Office Parking</option>
+                <option>Shopping Mall</option>
+                <option>Airport Parking</option>
+                <option>Function Hall</option>
+            </select>
+
+            <select id="bookingVehicle" required>
+                <option value="">Select Vehicle</option>
+                <option>Car</option>
+                <option>Bike</option>
+                <option>Cycle</option>
+            </select>
+
+            <select id="bookingType" required>
+                <option value="Reservation">Online Reservation</option>
+                <option value="Walk-in">Walk-in</option>
+            </select>
+
+            <input id="bookingDate" type="date" required>
+            <input id="bookingTime" type="time" required>
+
+            <button type="submit">Book Parking Slot</button>
+        </form>
+    </div>
+
+    <h2>My Reservations</h2>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Booking ID</th>
+                    <th>Location</th>
+                    <th>Vehicle</th>
+                    <th>Type</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="reservationList"></tbody>
+        </table>
+    </div>
+
+    <h2>Parking Membership</h2>
+    <div class="form-box">
+        <p>Register for membership and get access to reserved parking slots.</p>
+        <h3>Registration Fee: ₹500 (Demo)</h3>
+        <button onclick="registerMembership()">Register Membership</button>
+        <p id="membershipStatus">Membership: Not Registered</p>
+    </div>
+
+    <h2>AI Demand & Occupancy Prediction</h2>
+    <div class="prediction-grid">
+        <div class="prediction-card">
+            <h3>Predicted Demand</h3>
+            <p id="demandPrediction">Medium</p>
+        </div>
+        <div class="prediction-card">
+            <h3>Predicted Occupancy</h3>
+            <p id="occupancyPrediction">50%</p>
+        </div>
+        <div class="prediction-card">
+            <h3>Suggested Price</h3>
+            <p id="pricePrediction">₹40/hour</p>
+        </div>
+    </div>
+
+    <p class="note">
+        AI predictions shown here are sample values. Actual AI predictions
+        will be connected to the backend later.
+    </p>
+
+</section>
+
+<script src="app.js"></script>
+</body>
+</html>
