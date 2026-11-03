@@ -279,6 +279,69 @@ class ParkingSlot(Base):
         ),
     )
 
+class Reservation(Base):
+    __tablename__ = "reservations"
+
+    id: Mapped[int] = mapped_column(
+        Integer,
+        primary_key=True,
+        index=True,
+    )
+
+    user_id: Mapped[int] = mapped_column(
+        ForeignKey("users.id", ondelete="RESTRICT"),
+        nullable=False,
+        index=True,
+    )
+
+    vehicle_id: Mapped[int] = mapped_column(
+        ForeignKey("vehicles.id", ondelete="RESTRICT"),
+        nullable=False,
+        index=True,
+    )
+
+    location_id: Mapped[int] = mapped_column(
+        ForeignKey("parking_locations.id", ondelete="RESTRICT"),
+        nullable=False,
+        index=True,
+    )
+
+    slot_id: Mapped[int] = mapped_column(
+        ForeignKey("parking_slots.id", ondelete="RESTRICT"),
+        nullable=False,
+        index=True,
+    )
+
+    start_time: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        nullable=False,
+    )
+
+    end_time: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        nullable=False,
+    )
+
+    status: Mapped[str] = mapped_column(
+        String(20),
+        nullable=False,
+        default="confirmed",
+        index=True,
+    )
+
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        default=utc_now,
+        nullable=False,
+    )
+
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        default=utc_now,
+        onupdate=utc_now,
+        nullable=False,
+    )
+
 
 
 
