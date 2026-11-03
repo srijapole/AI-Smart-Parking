@@ -222,3 +222,44 @@ class ParkingSlotResponse(BaseModel):
 
     model_config = ConfigDict(from_attributes=True)
 
+# -------------------------
+# Reservation schemas
+# -------------------------
+
+ReservationStatus = Literal["confirmed", "cancelled", "completed"]
+
+
+class ReservationCreateRequest(BaseModel):
+    vehicle_id: int = Field(gt=0)
+    location_id: int = Field(gt=0)
+    slot_id: int = Field(gt=0)
+    start_time: datetime
+    end_time: datetime
+
+    @model_validator(mode="after")
+    def validate_reservation_time(self):
+        if self.start_time.tzinfo is None or self.start_time.utcoffset() is None:
+            raise ValueError("Start time must include a timezone")
+
+        if self.end_time.tzinfo is None or self.end_time.utcoffset() is None:
+            raise ValueError("End time must include a timezone")
+
+        if self.end_time <= self.start_time:
+            raise ValueError("End time must be after start time")
+
+        return self
+
+
+class ReservationResponse(BaseModel):
+    id: int
+    user_id: int
+    vehicle_id: int
+    location_id: int
+    slot_id: int
+    start_time: datetime
+    end_time: datetime
+    status: ReservationStatus
+    created_at: datetime
+    updated_at: datetime
+
+    model_config = ConfigDict(from_attributes=True)
