@@ -3,10 +3,12 @@ from datetime import datetime, timezone, date
 
 from sqlalchemy import (
     Boolean,
+    CheckConstraint,
     Date,
     DateTime,
     Float,
     ForeignKey,
+    Index,
     Integer,
     String,
     Text,
@@ -341,6 +343,98 @@ class Reservation(Base):
         onupdate=utc_now,
         nullable=False,
     )
+
+
+class ParkingSession(Base):
+    __tablename__ = "parking_sessions"
+
+    id: Mapped[int] = mapped_column(
+        Integer,
+        primary_key=True,
+        index=True,
+    )
+
+    user_id: Mapped[int] = mapped_column(
+        ForeignKey("users.id", ondelete="RESTRICT"),
+        nullable=False,
+        index=True,
+    )
+
+    vehicle_id: Mapped[int] = mapped_column(
+        ForeignKey("vehicles.id", ondelete="RESTRICT"),
+        nullable=False,
+        index=True,
+    )
+
+    location_id: Mapped[int] = mapped_column(
+        ForeignKey("parking_locations.id", ondelete="RESTRICT"),
+        nullable=False,
+        index=True,
+    )
+
+    slot_id: Mapped[int] = mapped_column(
+        ForeignKey("parking_slots.id", ondelete="RESTRICT"),
+        nullable=False,
+        index=True,
+    )
+
+    reservation_id: Mapped[int | None] = mapped_column(
+        ForeignKey("reservations.id", ondelete="RESTRICT"),
+        nullable=True,
+        unique=True,
+    )
+
+    entry_time: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        nullable=False,
+        default=utc_now,
+    )
+
+    exit_time: Mapped[datetime | None] = mapped_column(
+        DateTime(timezone=True),
+        nullable=True,
+    )
+
+    status: Mapped[str] = mapped_column(
+        String(20),
+        nullable=False,
+        default="active",
+        index=True,
+    )
+
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        default=utc_now,
+        nullable=False,
+    )
+
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        default=utc_now,
+        onupdate=utc_now,
+        nullable=False,
+    )
+
+    __table_args__ = (
+        Index(
+            "uq_parking_session_active_slot",
+            "slot_id",
+            unique=True,
+            postgresql_where=(status == "active"),
+        ),
+        Index(
+            "uq_parking_session_active_vehicle",
+            "vehicle_id",
+            unique=True,
+            postgresql_where=(status == "active"),
+        ),
+        CheckConstraint(
+            "(status = 'active' AND exit_time IS NULL) OR "
+            "(status = 'completed' AND exit_time IS NOT NULL)",
+            name="ck_parking_session_status_exit_time",
+        ),
+    )
+
 
 
 
