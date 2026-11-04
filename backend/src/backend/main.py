@@ -12,6 +12,7 @@ from backend.vehicles import router as vehicles_router
 from backend.locations import router as locations_router
 from backend.slots import router as slots_router
 from backend.reservations import router as reservations_router
+from backend.sessions import router as sessions_router
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -47,6 +48,7 @@ app.include_router(vehicles_router)
 app.include_router(locations_router)
 app.include_router(slots_router)
 app.include_router(reservations_router)
+app.include_router(sessions_router)
 
 
 @app.get("/health")

@@ -263,3 +263,57 @@ class ReservationResponse(BaseModel):
     updated_at: datetime
 
     model_config = ConfigDict(from_attributes=True)
+
+# -------------------------
+# Parking session schemas
+# -------------------------
+
+SessionStatus = Literal["active", "completed"]
+
+
+class ParkingSessionCheckInRequest(BaseModel):
+    vehicle_id: int = Field(gt=0)
+    location_id: int = Field(gt=0)
+    slot_id: int = Field(gt=0)
+    reservation_id: int | None = Field(default=None, gt=0)
+    expected_exit_time: datetime | None = None
+
+    @model_validator(mode="after")
+    def validate_check_in(self):
+        if self.reservation_id is None:
+            if self.expected_exit_time is None:
+                raise ValueError(
+                    "Expected exit time is required for walk-in parking"
+                )
+
+            if (
+                self.expected_exit_time.tzinfo is None
+                or self.expected_exit_time.utcoffset() is None
+            ):
+                raise ValueError(
+                    "Expected exit time must include a timezone"
+                )
+
+        elif self.expected_exit_time is not None:
+            raise ValueError(
+                "Expected exit time should not be provided "
+                "for reservation check-in"
+            )
+
+        return self
+
+
+class ParkingSessionResponse(BaseModel):
+    id: int
+    user_id: int
+    vehicle_id: int
+    location_id: int
+    slot_id: int
+    reservation_id: int | None
+    entry_time: datetime
+    exit_time: datetime | None
+    status: SessionStatus
+    created_at: datetime
+    updated_at: datetime
+
+    model_config = ConfigDict(from_attributes=True)    
